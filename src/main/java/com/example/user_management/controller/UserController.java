@@ -39,8 +39,13 @@ public class UserController {
     @PreAuthorize("hasAuthority('ROLE_admin')")
     @PutMapping("/{id}")
     public User update(@PathVariable Long id, @RequestBody User user) {
-        user.setId(id);
-        return repository.save(user);
+        User existingUser = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
+        existingUser.setUsername(user.getUsername());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setRole(user.getRole());
+        
+        return repository.save(existingUser);
     }
 
     @PreAuthorize("hasAuthority('ROLE_admin')")
@@ -48,39 +53,5 @@ public class UserController {
     public void delete(@PathVariable Long id) {
         repository.deleteById(id);
     }
-
-    
-
-
-
-  /*          @Autowired
-            private JwtDecoder jwtDecoder;
-
-            @GetMapping("/print-claims")
-            public String printJwtClaims() {
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-                if (authentication != null && authentication.getPrincipal() instanceof Jwt) {
-                    Jwt jwt = (Jwt) authentication.getPrincipal();
-                    Map<String, Object> claims = jwt.getClaims();
-
-                    // اول دسترسی به map داخلی realm_access
-                    Map<String, Object> realmAccess = (Map<String, Object>) claims.get("realm_access");
-
-                    // بعد لیست roles رو از داخل اون استخراج می‌کنیم
-                    List<String> roles = (List<String>) realmAccess.get("roles");
-
-                    System.out.println("Roles: " + roles);
-                    return "JWT Claims printed to console!";
-                }
-
-                return "No JWT token found in SecurityContext!";
-            }*/
-        
-
-        
-
-
-
 
 }
