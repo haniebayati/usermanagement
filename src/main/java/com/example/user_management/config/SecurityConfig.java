@@ -48,19 +48,6 @@ public class SecurityConfig {
        return JwtDecoders.fromIssuerLocation(properties.getJwt().getIssuerUri());
    }
    
-
- /*   @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("realm_access.roles");
-
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
-        return jwtAuthenticationConverter;
-    }*/
-    
-   
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
@@ -69,10 +56,10 @@ public class SecurityConfig {
     }
 
     public static class RealmRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
-
         @Override
         public Collection<GrantedAuthority> convert(Jwt jwt) {
             Map<String, Object> realmAccess = (Map<String, Object>) jwt.getClaims().get("realm_access");
+            
             if (realmAccess == null || realmAccess.get("roles") == null) {
                 return List.of();
             }
