@@ -1,55 +1,59 @@
-
 package com.example.user_management.model;
 
 import jakarta.persistence.*;
-//import lombok.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
+
 
 @Entity
-//@Data
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@Builder
 @Table(name = "app_user")
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Username cannot be null")
+    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters")
     private String username;
+
+    @NotNull(message = "Email cannot be null")
+    @Email(message = "Please provide a valid email address")
     private String email;
-    private String role;
 
-    public Long getId() {
-        return id;
-    }
+    @Enumerated(EnumType.STRING)  
+    private Role role;
+    
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public String getRole() {
-        return role;
-    }
+	public Role getRole() {
+		return role;
+	}
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+    
 }
-
-
