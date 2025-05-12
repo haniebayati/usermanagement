@@ -2,20 +2,22 @@ package com.example.user_management.controller;
 
 import com.example.user_management.model.User;
 import com.example.user_management.repository.UserRepository;
+import com.example.user_management.service.UserService;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserRepository repository;
+    private final UserService userService;
 
-    public UserController(UserRepository repository) {
+    public UserController(UserRepository repository, UserService userService) {
         this.repository = repository;
+        this.userService = userService;
     }
 
     @PreAuthorize("hasAuthority('ROLE_admin')")
@@ -39,13 +41,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ROLE_admin')")
     @PutMapping("/{id}")
     public User update(@PathVariable Long id, @RequestBody User user) {
-        User existingUser = repository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-
-        existingUser.setUsername(user.getUsername());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setRole(user.getRole());
-        
-        return repository.save(existingUser);
+        return userService.updateUser(id, user);
     }
 
     @PreAuthorize("hasAuthority('ROLE_admin')")
